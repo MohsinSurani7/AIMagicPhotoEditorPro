@@ -23,8 +23,7 @@
     "react-native-vision-camera": "^4.1.4",
     "react-native-image-picker": "^7.1.2",
     "@mediapipe/tasks-vision": "^0.10.9",
-    "@shopify/react-native-skia": "^1.12.4",
-    "react-native-google-mobile-ads": "^12.6.0"
+    "@shopify/react-native-skia": "^1.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
