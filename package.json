@@ -16,15 +16,13 @@
     "@react-navigation/stack": "^7.2.10",
     "@react-native/new-app-screen": "0.85.2",
     "react-native-safe-area-context": "^5.5.2",
-    "react-native-reanimated": "^4.1.1",
     "react-native-gesture-handler": "^2.28.0",
     "zustand": "^5.0.2",
     "react-native-screens": "^4.16.0",
     "react-native-vision-camera": "^4.1.4",
     "react-native-image-picker": "^7.1.2",
     "@mediapipe/tasks-vision": "^0.10.9",
-    "@shopify/react-native-skia": "^1.12.4",
-    "react-native-worklets-core": "^1.4.0"
+    "@shopify/react-native-skia": "^1.12.4"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
