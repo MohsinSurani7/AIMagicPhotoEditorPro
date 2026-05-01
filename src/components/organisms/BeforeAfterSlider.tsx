@@ -1,20 +1,10 @@
 /**
- * Before/After Slider Component using Skia
+ * Before/After Slider Component using react-native-svg
  */
 
 import React, { useState } from 'react';
-import { View, StyleSheet, Dimensions } from 'react-native';
-import {
-  Canvas,
-  Image,
-  useImage,
-  Group,
-  ClipRect,
-  mix,
-  useDerivedValue,
-  useSharedValue,
-  withTiming,
-} from '@shopify/react-native-skia';
+import { View, StyleSheet, Dimensions, Image as RNImage, Text } from 'react-native';
+import Svg, { Rect, Defs, ClipPath } from 'react-native-svg';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { THEME } from '../../constants';
 
@@ -33,65 +23,43 @@ const BeforeAfterSlider: React.FC<BeforeAfterSliderProps> = ({
   width = SCREEN_WIDTH - THEME.spacing.lg * 2,
   height = 400,
 }) => {
-  const beforeImage = useImage(beforeImageUri);
-  const afterImage = useImage(afterImageUri);
-  const progress = useSharedValue(0.5);
-
-  const derivedProgress = useDerivedValue(() => {
-    return withTiming(progress.value, { duration: 0 });
-  });
+  const [progress, setProgress] = useState(0.5);
 
   const panGesture = Gesture.Pan()
     .onUpdate((event) => {
       const newProgress = event.x / width;
-      progress.value = Math.max(0, Math.min(1, newProgress));
+      setProgress(Math.max(0, Math.min(1, newProgress)));
     });
 
-  if (!beforeImage || !afterImage) {
-    return (
-      <View style={[styles.container, { width, height }]}>
-        <View style={styles.loadingContainer}>
-          <Text style={styles.loadingText}>Loading images...</Text>
-        </View>
-      </View>
-    );
-  }
-
-  const clipWidth = mix(derivedProgress, 0, width);
+  const clipWidth = progress * width;
 
   return (
     <View style={[styles.container, { width, height }]}>
       <GestureDetector gesture={panGesture}>
-        <Canvas style={[styles.canvas, { width, height }]}>
+        <View style={styles.imageContainer}>
           {/* After Image (Background) */}
-          <Image
-            image={afterImage}
-            x={0}
-            y={0}
-            width={width}
-            height={height}
-            fit="cover"
+          <RNImage
+            source={{ uri: afterImageUri }}
+            style={[styles.image, { width, height }]}
+            resizeMode="cover"
           />
 
           {/* Before Image (Foreground with Clip) */}
-          <Group clip={<ClipRect x={0} y={0} width={clipWidth} height={height} />}>
-            <Image
-              image={beforeImage}
-              x={0}
-              y={0}
-              width={width}
-              height={height}
-              fit="cover"
+          <View style={[styles.clipContainer, { width: clipWidth, height }]}>
+            <RNImage
+              source={{ uri: beforeImageUri }}
+              style={[styles.image, { width, height }]}
+              resizeMode="cover"
             />
-          </Group>
-        </Canvas>
+          </View>
+        </View>
       </GestureDetector>
 
       {/* Slider Handle */}
       <View
         style={[
           styles.handle,
-          { left: derivedProgress.value * width - 20 },
+          { left: progress * width - 20 },
         ]}
       >
         <View style={styles.handleLine} />
@@ -116,16 +84,20 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     backgroundColor: THEME.colors.surface,
   },
-  canvas: {
-    backgroundColor: THEME.colors.surface,
-  },
-  loadingContainer: {
+  imageContainer: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    position: 'relative',
   },
-  loadingText: {
-    color: THEME.colors.textSecondary,
+  image: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+  },
+  clipContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    overflow: 'hidden',
   },
   handle: {
     position: 'absolute',

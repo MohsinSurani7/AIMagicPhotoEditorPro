@@ -15,7 +15,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import * as ImagePicker from 'react-native-image-picker';
 import { THEME } from '../../constants';
 import { useAppStore } from '../../stores/useAppStore';
 import AdService from '../../services/AdService';
@@ -43,25 +42,12 @@ const HomeScreen: React.FC = () => {
     navigation.navigate('Camera');
   };
 
-  const handleGalleryPress = async () => {
-    const options = {
-      mediaType: 'photo' as const,
-      quality: 1,
-      selectionLimit: 1,
-    };
-
-    try {
-      const result = await ImagePicker.launchImageLibrary(options);
-      
-      if (result.assets && result.assets[0]) {
-        const uri = result.assets[0].uri;
-        // @ts-ignore
-        navigation.navigate('Editor', { imageUri: uri });
-      }
-    } catch (error) {
-      console.error('Image picker error:', error);
-      Alert.alert('Error', 'Failed to open gallery');
-    }
+  const handleGalleryPress = () => {
+    Alert.alert(
+      'Gallery Not Available',
+      'Gallery functionality requires react-native-image-picker',
+      [{ text: 'OK' }]
+    );
   };
 
   const handleHistoryPress = (item: any) => {
